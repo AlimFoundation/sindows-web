@@ -5,7 +5,7 @@
 <title>Sindows</title>
 
 <style>
-/* ========== ЭКРАН ЗАГРУЗКИ ========== */
+/* ========================== ЭКРАН ЗАГРУЗКИ ========================== */
 body {
     margin: 0;
     font-family: monospace;
@@ -15,10 +15,28 @@ body {
     overflow: hidden;
 }
 
+/* Текст загрузки */
 #bootText {
     white-space: pre-line;
+    font-size: 16px;
 }
 
+/* Спиннер */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(0,255,136,0.2);
+    border-top: 4px solid #00ff88;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-top: 20px;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* Система */
 #system {
     display: none;
 }
@@ -28,8 +46,9 @@ body {
 
 <!-- ЭКРАН ЗАГРУЗКИ -->
 <div id="bootText"></div>
+<div class="spinner"></div>
 
-<!-- СИСТЕМА -->
+<!-- ИНТЕРФЕЙС NOWUI -->
 <div id="system">
     <!-- Панель задач -->
     <div class="now-taskbar">
@@ -52,7 +71,7 @@ body {
 </div>
 
 <script>
-/* ===================== ЗАГРУЗКА СИСТЕМЫ ===================== */
+/* ========================== ПЕЧАТЬ СТРОК ЗАГРУЗКИ ========================== */
 const lines = [
     "[ OK ] Starting Sindows kernel...",
     "[ OK ] Mounting virtual disk...",
@@ -70,44 +89,52 @@ function printLine() {
         index++;
         setTimeout(printLine, 600);
     } else {
-        setTimeout(loadNowUI, 800);
+        setTimeout(loadNowUI, 1000);
     }
 }
 
-/* ===================== ПОДКЛЮЧЕНИЕ CSS ===================== */
-function loadCSS(href) {
+/* ========================== ПОДКЛЮЧЕНИЕ CSS ========================== */
+function loadCSS(url) {
     return new Promise(resolve => {
         const link = document.createElement("link");
         link.rel = "stylesheet";
-        link.href = href;
+        link.href = url;
         link.onload = resolve;
         document.head.appendChild(link);
     });
 }
 
-/* ===================== ПОДКЛЮЧЕНИЕ JS ===================== */
-function loadJS(src) {
-    return new Promise(resolve => {
-        const script = document.createElement("script");
-        script.src = src;
-        script.onload = resolve;
-        document.body.appendChild(script);
-    });
+/* ========================== ПОДКЛЮЧЕНИЕ JS ЧЕРЕЗ FETCH + EVAL ========================== */
+async function loadJS(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Не удалось загрузить JS');
+    const code = await response.text();
+    eval(code); // выполняем код NowUI прямо на странице
 }
 
-/* ===================== ЗАПУСК NowUI ===================== */
+/* ========================== ЗАПУСК NOWUI ========================== */
 async function loadNowUI() {
-    await loadCSS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/nowui.css");
-    await loadJS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/nowui.js");
+    try {
+        await loadCSS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/nowui.css");
+        await loadJS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/nowui.js");
 
-    bootText.style.display = "none";
-    document.body.style.background = "#111";
-    document.getElementById("system").style.display = "block";
+        // скрываем загрузку
+        document.getElementById("bootText").style.display = "none";
+        document.querySelector(".spinner").style.display = "none";
+
+        // показываем интерфейс
+        document.getElementById("system").style.display = "block";
+        document.body.style.background = "#111";
+
+    } catch (err) {
+        bootText.innerHTML += "\n[ ERROR ] Не удалось загрузить NowUI!";
+        console.error(err);
+    }
 }
 
+/* ========================== СТАРТ ========================== */
 printLine();
 </script>
 
 </body>
 </html>
-
