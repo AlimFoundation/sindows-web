@@ -4,98 +4,114 @@
 <meta charset="UTF-8">
 <title>Sindows Installer</title>
 <style>
-body{
-    margin:0;
-    font-family: monospace;
-    background:black;
-    color:#00ff88;
-    overflow:hidden;
-}
-
-/* ========================== BOOT SCREEN ========================== */
-#bootScreen{
-    position:fixed; top:0; left:0; width:100%; height:100%;
-    display:flex; flex-direction: column; align-items:center; justify-content:center;
-    background:black; color:#00ff88; font-size:18px;
-}
-.spinner{
-    width:50px; height:50px; border:4px solid rgba(0,255,136,0.2);
-    border-top:4px solid #00ff88; border-radius:50%;
-    animation:spin 1s linear infinite;
-    margin-top:20px;
-}
+body{margin:0;font-family:"Segoe UI",monospace;background:#111;color:#0f0;overflow:hidden;}
+/* BOOT SCREEN */
+#bootScreen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;}
+.spinner{width:50px;height:50px;border:4px solid rgba(0,255,136,0.2);border-top:4px solid #00ff88;border-radius:50%;animation:spin 1s linear infinite;margin-top:20px;}
 @keyframes spin{100%{transform:rotate(360deg);}}
 
-/* ========================== INSTALLER ========================== */
-#installer{
-    display:none;
-    position:fixed;
-    top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    width:400px; background:#111; border-radius:12px;
-    box-shadow:0 10px 40px rgba(0,0,0,0.7);
-    overflow:hidden; color:#fff; text-align:center;
-}
-.installer-header{
-    background:#222; padding:15px; font-weight:bold; font-size:18px;
-}
+/* INSTALLER */
+#installer{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:450px;background:#111;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.7);color:#fff;text-align:center;}
+.installer-header{background:#222;padding:15px;font-weight:bold;font-size:18px;}
 .installer-body{padding:20px;}
+.install-btn{position:relative;overflow:hidden;padding:10px 20px;background:#0a84ff;border:none;border-radius:8px;color:#fff;font-size:16px;cursor:pointer;transition:0.2s;margin-top:10px;}
+.install-btn:hover{background:#006edc;transform:scale(1.05);}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);animation:rippleAnim 0.6s linear;background: rgba(255,255,255,0.5);pointer-events:none;}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0;}}
 
-/* ========================== BUTTON RIPPLES ========================== */
-.install-btn{
-    position: relative;
-    overflow: hidden;
-    padding:10px 20px;
-    background:#0a84ff;
-    border:none;
-    border-radius:8px;
-    color:#fff;
-    font-size:16px;
-    cursor:pointer;
-    transition:0.2s;
-}
-.install-btn:hover{background:#006edc; transform:scale(1.05);}
-.ripple{
-    position:absolute;
-    border-radius:50%;
-    transform:scale(0);
-    animation:rippleAnim 0.6s linear;
-    background: rgba(255,255,255,0.5);
-    pointer-events:none;
-}
-@keyframes rippleAnim{
-    to{transform:scale(4); opacity:0;}
-}
+/* LANGUAGE SELECT */
+.language-select{margin-top:15px;padding:8px 12px;background:#222;color:#0f0;border-radius:6px;border:none;font-size:14px;}
+
+/* PROGRESS */
+.progress-bar{width:80%; height:20px; background:#333; border-radius:10px; margin:15px auto; overflow:hidden;}
+.progress-fill{width:0%; height:100%; background:#0a84ff; border-radius:10px; transition: width 0.4s ease;}
+
+/* SYSTEM */
+#system{display:none;height:100vh;overflow:hidden;background:#111;}
+.now-taskbar{position:fixed;bottom:0;width:100%;height:50px;background:rgba(0,0,0,0.8);display:flex;align-items:center;padding:0 15px;gap:10px;backdrop-filter:blur(5px);border-top:1px solid rgba(255,255,255,0.1);}
+.now-btn{padding:6px 14px;background:#0a84ff;border:none;border-radius:6px;color:#fff;cursor:pointer;transition:0.2s;font-size:14px;font-weight:500;}
+.now-btn:hover{background:#006edc;transform:scale(1.05);}
+.now-window{position:absolute;background: rgba(30,30,30,0.95);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6);overflow:hidden;display:none;animation:fadeIn 0.3s ease forwards;}
+.now-window-header{background:#222;padding:10px;color:#fff;font-weight:bold;cursor:move;user-select:none;}
+.now-window-body{padding:15px;font-size:14px;color:#ddd;}
+.now-window-controls{float:right;display:flex;gap:6px;}
+.now-window-controls span{display:inline-block;width:16px;height:16px;background:#444;border-radius:50%;cursor:pointer;transition:0.2s;}
+.now-window-controls span:hover{background:#0a84ff;}
+.menu-start{position:absolute;bottom:50px;left:0;width:200px;background:#222;border-radius:0 0 10px 10px;padding:10px;display:none;flex-direction:column;gap:5px;}
+.menu-start button{padding:8px 10px;background:#0a84ff;color:#fff;border:none;border-radius:6px;cursor:pointer;transition:0.2s;}
+.menu-start button:hover{background:#006edc;transform:scale(1.05);}
+#browserFrame{width:100%;height:300px;border:none;border-radius:6px;background:#000;color:#fff;text-align:center;display:flex;align-items:center;justify-content:center;font-size:16px;}
 </style>
 </head>
 <body>
 
+<!-- BOOT SCREEN -->
 <div id="bootScreen">
     BOOT MANAGER IS BOOTING...
     <div class="spinner"></div>
 </div>
 
+<!-- INSTALLER -->
 <div id="installer">
     <div class="installer-header">Sindows Setup</div>
     <div class="installer-body">
-        <p>Нажмите Install, чтобы начать установку.</p>
+        <label for="lang">Select Language:</label><br>
+        <select id="lang" class="language-select">
+            <option value="EN">English</option>
+            <option value="RU">Русский</option>
+            <option value="ES">Español</option>
+        </select>
+        <br>
         <button class="install-btn" id="installBtn">Install</button>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div id="installSteps"></div>
+    </div>
+</div>
+
+<!-- SYSTEM -->
+<div id="system">
+    <div class="now-taskbar">
+        <button class="now-btn" id="startBtn">Пуск</button>
+    </div>
+
+    <div class="menu-start" id="startMenu">
+        <button id="vbBtn">VirtualBox</button>
+        <button id="browserBtn">Browser</button>
+    </div>
+
+    <!-- VirtualBox Window -->
+    <div class="now-window" id="vbWin" style="top:80px; left:100px; width:600px; height:400px;">
+        <div class="now-window-header">VirtualBox
+            <div class="now-window-controls"><span onclick="closeWindow('vbWin')"></span></div>
+        </div>
+        <div class="now-window-body">
+            <button class="now-btn" id="runVB">Run Sindows 2</button>
+            <div id="vbFrameContainer" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <!-- Browser Window -->
+    <div class="now-window" id="browserWin" style="top:120px; left:150px; width:600px; height:400px;">
+        <div class="now-window-header">Browser
+            <div class="now-window-controls"><span onclick="closeWindow('browserWin')"></span></div>
+        </div>
+        <div class="now-window-body">
+            <iframe id="browserFrame"></iframe>
+        </div>
     </div>
 </div>
 
 <script>
-const bootScreen=document.getElementById("bootScreen");
-const installer=document.getElementById("installer");
+// BOOT SCREEN
+setTimeout(()=>{document.getElementById("bootScreen").style.display="none"; document.getElementById("installer").style.display="block";},2000);
 
-// Появление установщика через 2 секунды после Boot
-setTimeout(()=>{
-    bootScreen.style.display="none";
-    installer.style.display="block";
-},2000);
-
-// ================= Ripple Button =================
+// INSTALL BUTTON RIPPLE + INSTALLATION
 const installBtn=document.getElementById("installBtn");
+const progressFill=document.getElementById("progressFill");
+const installSteps=document.getElementById("installSteps");
+
 installBtn.addEventListener("click",(e)=>{
+    // ripple
     const circle=document.createElement("span");
     circle.classList.add("ripple");
     const rect=installBtn.getBoundingClientRect();
@@ -104,12 +120,71 @@ installBtn.addEventListener("click",(e)=>{
     circle.style.left=e.clientX-rect.left-size/2+"px";
     circle.style.top=e.clientY-rect.top-size/2+"px";
     installBtn.appendChild(circle);
-    setTimeout(()=>{circle.remove();},600);
+    setTimeout(()=>circle.remove(),600);
+
+    // installation steps
+    installBtn.disabled=true;
+    const steps=["Checking system...","Loading modules...","Configuring interface...","Finalizing setup..."];
+    let step=0;
+    installSteps.innerHTML="";
+    const interval=setInterval(()=>{
+        if(step<steps.length){
+            const p=document.createElement("p");
+            p.textContent="[ OK ] "+steps[step];
+            p.style.opacity=0; p.style.transform="translateY(20px)";
+            installSteps.appendChild(p);
+            setTimeout(()=>{p.style.transition="all 0.5s ease"; p.style.opacity=1; p.style.transform="translateY(0)";},50);
+            progressFill.style.width=((step+1)/steps.length*100)+"%";
+            step++;
+        }else{
+            clearInterval(interval);
+            setTimeout(()=>{document.getElementById("installer").style.display="none"; document.getElementById("system").style.display="block";},500);
+        }
+    },800);
 });
+
+// MENU START
+const startBtn=document.getElementById("startBtn");
+const startMenu=document.getElementById("startMenu");
+startBtn.addEventListener("click",()=>{startMenu.style.display=startMenu.style.display==="flex"?"none":"flex";});
+
+// VirtualBox
+const vbBtn=document.getElementById("vbBtn");
+const vbWin=document.getElementById("vbWin");
+vbBtn.addEventListener("click",()=>{vbWin.style.display="block"; startMenu.style.display="none";});
+document.getElementById("runVB").addEventListener("click",()=>{
+    const container=document.getElementById("vbFrameContainer");
+    container.innerHTML='<iframe src="https://alimfoundation.github.io/sindows-web/Index.html" width="100%" height="300px" style="border:none;border-radius:6px;"></iframe>';
+});
+
+// Browser
+const browserBtn=document.getElementById("browserBtn");
+const browserWin=document.getElementById("browserWin");
+const browserFrame=document.getElementById("browserFrame");
+browserBtn.addEventListener("click",()=>{
+    browserWin.style.display="block"; startMenu.style.display="none";
+    const testURL="https://alimfoundation.github.io/sindows-web/Index.html";
+    fetch(testURL,{mode:'no-cors'})
+    .then(()=>{browserFrame.src=testURL;})
+    .catch(()=>{browserFrame.style.display="flex"; browserFrame.innerHTML="Please check your connection";});
+});
+
+// NowUI draggable
+function makeDraggable(win){
+    const header=win.querySelector(".now-window-header");
+    let offsetX=0, offsetY=0, isDown=false;
+    header.addEventListener("mousedown",e=>{isDown=true; offsetX=e.clientX-win.offsetLeft; offsetY=e.clientY-win.offsetTop;});
+    document.addEventListener("mouseup",()=>isDown=false);
+    document.addEventListener("mousemove",e=>{if(!isDown)return; win.style.left=(e.clientX-offsetX)+"px"; win.style.top=(e.clientY-offsetY)+"px";});
+}
+document.querySelectorAll(".now-window").forEach(win=>makeDraggable(win));
+
+function closeWindow(id){document.getElementById(id).style.display="none";}
 </script>
 </body>
 </html>
 
 
 
-v6.0
+
+v7.0
