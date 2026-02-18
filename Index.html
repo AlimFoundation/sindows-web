@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <title>Sindows</title>
 
+<!-- Локальный CSS NowUI -->
+<link rel="stylesheet" href="nowui.css">
+
 <style>
 /* ========================== ЭКРАН ЗАГРУЗКИ ========================== */
 body {
@@ -70,6 +73,9 @@ body {
     </div>
 </div>
 
+<!-- Локальный JS NowUI -->
+<script src="Nowui.js"></script>
+
 <script>
 /* ========================== ПЕЧАТЬ СТРОК ЗАГРУЗКИ ========================== */
 const lines = [
@@ -89,47 +95,15 @@ function printLine() {
         index++;
         setTimeout(printLine, 600);
     } else {
-        setTimeout(loadNowUI, 1000);
+        setTimeout(showSystem, 1000);
     }
 }
 
-/* ========================== ПОДКЛЮЧЕНИЕ CSS ========================== */
-function loadCSS(url) {
-    return new Promise(resolve => {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = url;
-        link.onload = resolve;
-        document.head.appendChild(link);
-    });
-}
-
-/* ========================== ПОДКЛЮЧЕНИЕ JS ЧЕРЕЗ FETCH + EVAL ========================== */
-async function loadJS(url) {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Не удалось загрузить JS');
-    const code = await response.text();
-    eval(code); // выполняем код NowUI прямо на странице
-}
-
-/* ========================== ЗАПУСК NOWUI ========================== */
-async function loadNowUI() {
-    try {
-        await loadCSS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/nowui.css");
-        await loadJS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/Nowui.js");
-
-        // скрываем загрузку
-        document.getElementById("bootText").style.display = "none";
-        document.querySelector(".spinner").style.display = "none";
-
-        // показываем интерфейс
-        document.getElementById("system").style.display = "block";
-        document.body.style.background = "#111";
-
-    } catch (err) {
-        bootText.innerHTML += "\n[ ERROR ] Не удалось загрузить NowUI!";
-        console.error(err);
-    }
+function showSystem() {
+    document.getElementById("bootText").style.display = "none";
+    document.querySelector(".spinner").style.display = "none";
+    document.getElementById("system").style.display = "block";
+    document.body.style.background = "#111";
 }
 
 /* ========================== СТАРТ ========================== */
@@ -138,4 +112,5 @@ printLine();
 
 </body>
 </html>
-v1.0
+
+v2.0
