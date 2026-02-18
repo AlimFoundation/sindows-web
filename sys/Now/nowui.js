@@ -1,6 +1,4 @@
-/* =======================
-   NowUI Sindows JS
-======================= */
+/* ======================= NowUI Sindows JS ======================= */
 
 /* Перетаскивание окон */
 function makeDraggable(win) {
@@ -56,3 +54,4 @@ window.addEventListener("DOMContentLoaded", () => {
     const windows = document.querySelectorAll(".now-window");
     windows.forEach(win => makeDraggable(win));
 });
+v1.0
