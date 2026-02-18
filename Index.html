@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Sindows Installer</title>
+<title>Sindows Installer & Browser</title>
 <style>
 body{margin:0;font-family:"Segoe UI",monospace;background:#111;color:#0f0;overflow:hidden;}
+
 /* BOOT SCREEN */
 #bootScreen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;}
 .spinner{width:50px;height:50px;border:4px solid rgba(0,255,136,0.2);border-top:4px solid #00ff88;border-radius:50%;animation:spin 1s linear infinite;margin-top:20px;}
@@ -25,6 +26,7 @@ body{margin:0;font-family:"Segoe UI",monospace;background:#111;color:#0f0;overfl
 /* PROGRESS */
 .progress-bar{width:80%; height:20px; background:#333; border-radius:10px; margin:15px auto; overflow:hidden;}
 .progress-fill{width:0%; height:100%; background:#0a84ff; border-radius:10px; transition: width 0.4s ease;}
+#installSteps p{margin:4px 0;}
 
 /* SYSTEM */
 #system{display:none;height:100vh;overflow:hidden;background:#111;}
@@ -41,6 +43,7 @@ body{margin:0;font-family:"Segoe UI",monospace;background:#111;color:#0f0;overfl
 .menu-start button{padding:8px 10px;background:#0a84ff;color:#fff;border:none;border-radius:6px;cursor:pointer;transition:0.2s;}
 .menu-start button:hover{background:#006edc;transform:scale(1.05);}
 #browserFrame{width:100%;height:300px;border:none;border-radius:6px;background:#000;color:#fff;text-align:center;display:flex;align-items:center;justify-content:center;font-size:16px;}
+#urlInput{flex:1;padding:6px 10px;border-radius:6px;border:none;font-size:14px;}
 </style>
 </head>
 <body>
@@ -91,21 +94,29 @@ body{margin:0;font-family:"Segoe UI",monospace;background:#111;color:#0f0;overfl
     </div>
 
     <!-- Browser Window -->
-    <div class="now-window" id="browserWin" style="top:120px; left:150px; width:600px; height:400px;">
+    <div class="now-window" id="browserWin" style="top:120px; left:150px; width:700px; height:450px;">
         <div class="now-window-header">Browser
             <div class="now-window-controls"><span onclick="closeWindow('browserWin')"></span></div>
         </div>
         <div class="now-window-body">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <input type="text" id="urlInput" placeholder="Enter URL (https://example.com)">
+                <button class="now-btn" id="loadBtn">Go</button>
+                <div class="spinner" id="browserSpinner" style="width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-top:3px solid #0a84ff;border-radius:50%;display:none;"></div>
+            </div>
             <iframe id="browserFrame"></iframe>
         </div>
     </div>
 </div>
 
 <script>
-// BOOT SCREEN
-setTimeout(()=>{document.getElementById("bootScreen").style.display="none"; document.getElementById("installer").style.display="block";},2000);
+// ================= BOOT SCREEN =================
+setTimeout(()=>{
+    document.getElementById("bootScreen").style.display="none";
+    document.getElementById("installer").style.display="block";
+},2000);
 
-// INSTALL BUTTON RIPPLE + INSTALLATION
+// ================= INSTALL BUTTON RIPPLE =================
 const installBtn=document.getElementById("installBtn");
 const progressFill=document.getElementById("progressFill");
 const installSteps=document.getElementById("installSteps");
@@ -138,17 +149,20 @@ installBtn.addEventListener("click",(e)=>{
             step++;
         }else{
             clearInterval(interval);
-            setTimeout(()=>{document.getElementById("installer").style.display="none"; document.getElementById("system").style.display="block";},500);
+            setTimeout(()=>{
+                document.getElementById("installer").style.display="none";
+                document.getElementById("system").style.display="block";
+            },500);
         }
     },800);
 });
 
-// MENU START
+// ================= MENU START =================
 const startBtn=document.getElementById("startBtn");
 const startMenu=document.getElementById("startMenu");
 startBtn.addEventListener("click",()=>{startMenu.style.display=startMenu.style.display==="flex"?"none":"flex";});
 
-// VirtualBox
+// ================= VirtualBox =================
 const vbBtn=document.getElementById("vbBtn");
 const vbWin=document.getElementById("vbWin");
 vbBtn.addEventListener("click",()=>{vbWin.style.display="block"; startMenu.style.display="none";});
@@ -157,19 +171,41 @@ document.getElementById("runVB").addEventListener("click",()=>{
     container.innerHTML='<iframe src="https://alimfoundation.github.io/sindows-web/Index.html" width="100%" height="300px" style="border:none;border-radius:6px;"></iframe>';
 });
 
-// Browser
+// ================= Browser =================
 const browserBtn=document.getElementById("browserBtn");
 const browserWin=document.getElementById("browserWin");
 const browserFrame=document.getElementById("browserFrame");
-browserBtn.addEventListener("click",()=>{
-    browserWin.style.display="block"; startMenu.style.display="none";
-    const testURL="https://alimfoundation.github.io/sindows-web/Index.html";
-    fetch(testURL,{mode:'no-cors'})
-    .then(()=>{browserFrame.src=testURL;})
-    .catch(()=>{browserFrame.style.display="flex"; browserFrame.innerHTML="Please check your connection";});
+const browserSpinner=document.getElementById("browserSpinner");
+const urlInput=document.getElementById("urlInput");
+const loadBtn=document.getElementById("loadBtn");
+
+browserBtn.addEventListener("click",()=>{browserWin.style.display="block"; startMenu.style.display="none";});
+
+loadBtn.addEventListener("click",()=>{
+    let url=urlInput.value.trim();
+    if(!url.startsWith("http")) url="https://"+url;
+    browserSpinner.style.display="inline-block";
+    browserFrame.style.display="none";
+
+    // Пробуем загрузить iframe
+    const tmpFrame=document.createElement("iframe");
+    tmpFrame.src=url;
+    tmpFrame.onload=()=>{
+        browserFrame.src=url;
+        browserFrame.style.display="block";
+        browserSpinner.style.display="none";
+    };
+    tmpFrame.onerror=()=>{
+        browserFrame.src="";
+        browserFrame.style.display="flex";
+        browserFrame.textContent="Please check your connection";
+        browserSpinner.style.display="none";
+    };
+    document.body.appendChild(tmpFrame);
+    setTimeout(()=>document.body.removeChild(tmpFrame),5000); // cleanup
 });
 
-// NowUI draggable
+// ================= NowUI draggable =================
 function makeDraggable(win){
     const header=win.querySelector(".now-window-header");
     let offsetX=0, offsetY=0, isDown=false;
@@ -178,7 +214,6 @@ function makeDraggable(win){
     document.addEventListener("mousemove",e=>{if(!isDown)return; win.style.left=(e.clientX-offsetX)+"px"; win.style.top=(e.clientY-offsetY)+"px";});
 }
 document.querySelectorAll(".now-window").forEach(win=>makeDraggable(win));
-
 function closeWindow(id){document.getElementById(id).style.display="none";}
 </script>
 </body>
@@ -187,4 +222,5 @@ function closeWindow(id){document.getElementById(id).style.display="none";}
 
 
 
-v7.0
+
+v8.0
