@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Sindows</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: #00ff88;
+    font-family: monospace;
+    padding: 20px;
+    overflow: hidden;
+}
+
+#bootText {
+    white-space: pre-line;
+}
+
+#system {
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<div id="bootText"></div>
+
+<div id="system">
+    <!-- Тут будет твой NowUI -->
+</div>
+
+<script>
+
+const lines = [
+    "[ OK ] Starting Sindows kernel...",
+    "[ OK ] Mounting virtual disk...",
+    "[ OK ] Loading NowUI styles...",
+    "[ OK ] Loading NowUI engine...",
+    "[ OK ] System ready."
+];
+
+const bootText = document.getElementById("bootText");
+
+let index = 0;
+
+function printLine() {
+    if (index < lines.length) {
+        bootText.innerHTML += lines[index] + "\n";
+        index++;
+        setTimeout(printLine, 600);
+    } else {
+        setTimeout(loadNowUI, 800);
+    }
+}
+
+function loadCSS(href) {
+    return new Promise(resolve => {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = href;
+        link.onload = resolve;
+        document.head.appendChild(link);
+    });
+}
+
+function loadJS(src) {
+    return new Promise(resolve => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        document.body.appendChild(script);
+    });
+}
+
+async function loadNowUI() {
+
+    await loadCSS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/main/sys/Now/nowui.css");
+    await loadJS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/main/sys/Now/nowui.js");
+
+    bootText.style.display = "none";
+    document.body.style.background = "#111";
+    document.getElementById("system").style.display = "block";
+}
+
+printLine();
+
+</script>
+
+</body>
+</html>
