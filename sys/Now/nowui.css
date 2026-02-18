@@ -1,0 +1,141 @@
+/* =======================
+   NowUI Sindows CSS
+======================= */
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom, #1e3c72, #2a5298);
+    color: #f0f0f0;
+    overflow: hidden;
+}
+
+/* Панель задач */
+.now-taskbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    gap: 10px;
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Кнопки на панели */
+.now-btn {
+    padding: 6px 14px;
+    background: #0a84ff;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.now-btn:hover {
+    background: #006edc;
+    transform: scale(1.05);
+}
+
+/* Окна */
+.now-window {
+    position: absolute;
+    background: rgba(30,30,30,0.95);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    overflow: hidden;
+    display: none;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Анимация появления окна */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Заголовок окна */
+.now-window-header {
+    background: #222;
+    padding: 10px;
+    color: #fff;
+    font-weight: bold;
+    cursor: move;
+    user-select: none;
+}
+
+/* Тело окна */
+.now-window-body {
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ddd;
+}
+
+/* Кнопки закрытия, сворачивания */
+.now-window-controls {
+    float: right;
+    display: flex;
+    gap: 6px;
+}
+
+.now-window-controls span {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: #444;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.now-window-controls span:hover {
+    background: #0a84ff;
+}
+
+/* Иконки рабочего стола */
+.now-icon {
+    width: 70px;
+    text-align: center;
+    margin: 10px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.now-icon img {
+    width: 50px;
+    height: 50px;
+}
+
+/* Плавающие уведомления */
+.now-toast {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    background: #0a84ff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: toastIn 0.5s forwards;
+}
+
+@keyframes toastIn {
+    to { opacity: 1; transform: translateY(0); }
+}
