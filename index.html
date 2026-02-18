@@ -5,11 +5,12 @@
 <title>Sindows</title>
 
 <style>
+/* ========== ЭКРАН ЗАГРУЗКИ ========== */
 body {
     margin: 0;
+    font-family: monospace;
     background: black;
     color: #00ff88;
-    font-family: monospace;
     padding: 20px;
     overflow: hidden;
 }
@@ -25,14 +26,33 @@ body {
 </head>
 <body>
 
+<!-- ЭКРАН ЗАГРУЗКИ -->
 <div id="bootText"></div>
 
+<!-- СИСТЕМА -->
 <div id="system">
-    <!-- Тут будет твой NowUI -->
+    <!-- Панель задач -->
+    <div class="now-taskbar">
+        <button class="now-btn" onclick="openWindow('win1')">Открыть окно</button>
+        <button class="now-btn" onclick="showToast('Привет из Sindows!')">Показать уведомление</button>
+    </div>
+
+    <!-- Окно NowUI -->
+    <div class="now-window" id="win1" style="top:100px; left:100px; width:300px; height:200px;">
+        <div class="now-window-header">
+            Мое окно
+            <div class="now-window-controls">
+                <span onclick="closeWindow('win1')"></span>
+            </div>
+        </div>
+        <div class="now-window-body">
+            Привет! Это стильное окно NowUI.
+        </div>
+    </div>
 </div>
 
 <script>
-
+/* ===================== ЗАГРУЗКА СИСТЕМЫ ===================== */
 const lines = [
     "[ OK ] Starting Sindows kernel...",
     "[ OK ] Mounting virtual disk...",
@@ -42,7 +62,6 @@ const lines = [
 ];
 
 const bootText = document.getElementById("bootText");
-
 let index = 0;
 
 function printLine() {
@@ -55,6 +74,7 @@ function printLine() {
     }
 }
 
+/* ===================== ПОДКЛЮЧЕНИЕ CSS ===================== */
 function loadCSS(href) {
     return new Promise(resolve => {
         const link = document.createElement("link");
@@ -65,6 +85,7 @@ function loadCSS(href) {
     });
 }
 
+/* ===================== ПОДКЛЮЧЕНИЕ JS ===================== */
 function loadJS(src) {
     return new Promise(resolve => {
         const script = document.createElement("script");
@@ -74,10 +95,10 @@ function loadJS(src) {
     });
 }
 
+/* ===================== ЗАПУСК NowUI ===================== */
 async function loadNowUI() {
-
-    await loadCSS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/main/sys/Now/nowui.css");
-    await loadJS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/main/sys/Now/nowui.js");
+    await loadCSS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/nowui.css");
+    await loadJS("https://raw.githubusercontent.com/AlimFoundation/sindows-web/refs/heads/main/sys/Now/nowui.js");
 
     bootText.style.display = "none";
     document.body.style.background = "#111";
@@ -85,8 +106,8 @@ async function loadNowUI() {
 }
 
 printLine();
-
 </script>
 
 </body>
 </html>
+
