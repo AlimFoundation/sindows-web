@@ -2,136 +2,62 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Sindows Installer</title>
+<title>Sindows Boot</title>
 <style>
-/* ========================== ОБЩИЕ СТИЛИ ========================== */
-body {
-    margin: 0;
+body{
+    margin:0;
     font-family: monospace;
-    background: black;
-    color: #00ff88;
-    overflow: hidden;
+    background:black;
+    color:#00ff88;
+    overflow:hidden;
 }
-
-/* ========================== ЭКРАН ЗАГРУЗКИ ========================== */
-#bootScreen {
-    position: fixed; top:0; left:0; width:100%; height:100%;
-    display:flex; flex-direction: column; align-items: center; justify-content: center;
+#bootScreen{
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    display:flex; flex-direction: column; align-items:center; justify-content:center;
     background:black; color:#00ff88;
 }
-#bootText { white-space: pre-line; font-size:16px; text-align:center; max-width:80%; }
-.spinner {
-    width:50px; height:50px;
-    border:4px solid rgba(0,255,136,0.2);
-    border-top:4px solid #00ff88;
-    border-radius:50%;
-    animation: spin 1s linear infinite;
+#bootText{white-space: pre-line; font-size:16px; max-width:80%; text-align:center;}
+.spinner{
+    width:50px; height:50px; border:4px solid rgba(0,255,136,0.2);
+    border-top:4px solid #00ff88; border-radius:50%; animation:spin 1s linear infinite;
     margin-top:20px;
 }
-@keyframes spin {100%{transform:rotate(360deg);}}
-
-/* ========================== УСТАНОВЩИК ========================== */
-#installer {
-    display:none;
-    position: fixed;
-    bottom:-500px; /* старт снизу */
-    left:50%;
+@keyframes spin{100%{transform:rotate(360deg);}}
+#installer{
+    display:none; position:fixed; bottom:-500px; left:50%;
     transform:translateX(-50%);
-    width:400px;
-    background:#111;
-    border-radius:12px;
-    box-shadow:0 10px 40px rgba(0,0,0,0.7);
-    overflow:hidden;
-    color:#fff;
-    font-family:"Segoe UI", sans-serif;
-    animation: slideUp 0.8s ease forwards;
+    width:400px; background:#111; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.7);
+    overflow:hidden; color:#fff; font-family:"Segoe UI", sans-serif; animation: slideUp 0.8s ease forwards;
 }
-@keyframes slideUp {
-    from {bottom:-500px; opacity:0;}
-    to {bottom:50px; opacity:1;}
-}
-
-.installer-header {
-    background:#222;
-    padding:15px;
-    font-weight:bold;
-    font-size:18px;
-    text-align:center;
-}
-.installer-body {
-    padding:20px;
-    text-align:left;
-    max-height:300px;
-    overflow-y:auto;
-}
-
-.progress-bar {
-    width:80%; height:20px; background:#333; border-radius:10px; margin:15px auto; overflow:hidden;
-}
-.progress-fill { width:0%; height:100%; background:#0a84ff; border-radius:10px; transition: width 0.4s ease; }
-
-.install-btn {
-    padding:10px 20px; background:#0a84ff; border:none; border-radius:8px;
-    color:#fff; cursor:pointer; font-size:16px; margin-top:15px;
-    transition:0.2s;
-}
-
-/* riggle анимация при нажатии */
-.install-btn:active {
-    animation: riggle 0.2s ease;
-}
-@keyframes riggle {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-}
-
-/* ========================== NOWUI ========================== */
-.now-taskbar {
-    position: fixed; bottom:0; width:100%; height:50px;
-    background: rgba(0,0,0,0.8); display:flex; align-items:center; padding:0 15px; gap:10px;
-    backdrop-filter: blur(5px); border-top:1px solid rgba(255,255,255,0.1);
-}
-.now-btn {
-    padding:6px 14px; background:#0a84ff; border:none; border-radius:6px;
-    color:#fff; cursor:pointer; transition:0.2s; font-size:14px; font-weight:500;
-}
-.now-btn:hover { background:#006edc; transform:scale(1.05); }
-
-.now-window {
-    position:absolute; background: rgba(30,30,30,0.95);
-    border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.6);
-    overflow:hidden; display:none; animation:fadeIn 0.3s ease forwards;
-}
-.now-window-header {
-    background:#222; padding:10px; color:#fff; font-weight:bold; cursor:move; user-select:none;
-}
-.now-window-body { padding:15px; font-size:14px; color:#ddd; }
-.now-window-controls { float:right; display:flex; gap:6px; }
-.now-window-controls span { display:inline-block; width:16px; height:16px; background:#444; border-radius:50%; cursor:pointer; transition:0.2s; }
-.now-window-controls span:hover { background:#0a84ff; }
-.now-toast {
-    position:fixed; bottom:60px; right:20px;
-    background:#0a84ff; padding:12px 18px; border-radius:8px;
-    color:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.5);
-    opacity:0; transform:translateY(20px); animation:toastIn 0.5s forwards;
-}
-@keyframes toastIn { to {opacity:1; transform:translateY(0);} }
-
-#system { display:none; background:#111; height:100vh; overflow:hidden; }
+@keyframes slideUp{from{bottom:-500px;opacity:0;} to{bottom:50px;opacity:1;}}
+.installer-header{background:#222; padding:15px; font-weight:bold; font-size:18px; text-align:center;}
+.installer-body{padding:20px; text-align:left; max-height:300px; overflow-y:auto;}
+.progress-bar{width:80%; height:20px; background:#333; border-radius:10px; margin:15px auto; overflow:hidden;}
+.progress-fill{width:0%; height:100%; background:#0a84ff; border-radius:10px; transition: width 0.4s ease;}
+.install-btn{padding:10px 20px; background:#0a84ff; border:none; border-radius:8px; color:#fff; cursor:pointer; font-size:16px; margin-top:15px; transition:0.2s;}
+.install-btn:active{animation: riggle 0.2s ease;}
+@keyframes riggle{0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
+.now-taskbar{position:fixed; bottom:0; width:100%; height:50px; background: rgba(0,0,0,0.8); display:flex; align-items:center; padding:0 15px; gap:10px; backdrop-filter: blur(5px); border-top:1px solid rgba(255,255,255,0.1);}
+.now-btn{padding:6px 14px; background:#0a84ff; border:none; border-radius:6px; color:#fff; cursor:pointer; transition:0.2s; font-size:14px; font-weight:500;}
+.now-btn:hover{background:#006edc; transform:scale(1.05);}
+.now-window{position:absolute; background: rgba(30,30,30,0.95); border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.6); overflow:hidden; display:none; animation:fadeIn 0.3s ease forwards;}
+.now-window-header{background:#222; padding:10px; color:#fff; font-weight:bold; cursor:move; user-select:none;}
+.now-window-body{padding:15px; font-size:14px; color:#ddd;}
+.now-window-controls{float:right; display:flex; gap:6px;}
+.now-window-controls span{display:inline-block; width:16px; height:16px; background:#444; border-radius:50%; cursor:pointer; transition:0.2s;}
+.now-window-controls span:hover{background:#0a84ff;}
+.now-toast{position:fixed; bottom:60px; right:20px; background:#0a84ff; padding:12px 18px; border-radius:8px; color:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.5); opacity:0; transform:translateY(20px); animation:toastIn 0.5s forwards;}
+@keyframes toastIn{to{opacity:1; transform:translateY(0);}}
+#system{display:none; background:#111; height:100vh; overflow:hidden;}
 </style>
 </head>
 <body>
 
-<!-- ========================== BOOT SCREEN ========================== -->
 <div id="bootScreen">
-    <div id="bootText"></div>
+    <div id="bootText">BOOT MANAGER IS BOOTING...</div>
     <div class="spinner"></div>
 </div>
 
-<!-- ========================== INSTALLER ========================== -->
 <div id="installer">
     <div class="installer-header">Sindows Setup</div>
     <div class="installer-body" id="installBody"></div>
@@ -139,62 +65,44 @@ body {
     <button class="install-btn" id="installBtn">Install</button>
 </div>
 
-<!-- ========================== NOWUI SYSTEM ========================== -->
 <div id="system">
     <div class="now-taskbar">
         <button class="now-btn" onclick="openWindow('win1')">Открыть окно</button>
         <button class="now-btn" onclick="showToast('Привет из Sindows!')">Показать уведомление</button>
     </div>
     <div class="now-window" id="win1" style="top:100px; left:100px; width:300px; height:200px;">
-        <div class="now-window-header">
-            Мое окно
-            <div class="now-window-controls">
-                <span onclick="closeWindow('win1')"></span>
-            </div>
-        </div>
+        <div class="now-window-header">Мое окно<div class="now-window-controls"><span onclick="closeWindow('win1')"></span></div></div>
         <div class="now-window-body">Привет! Это стильное окно NowUI.</div>
     </div>
 </div>
 
 <script>
-/* ========================== ПЕЧАТЬ СТРОК ЗАГРУЗКИ ========================== */
-const lines = [];
-for(let i=1;i<=50;i++){ // создаём очень много строк
-    lines.push(`[ OK ] Loading module ${i}...`);
-}
-const bootText = document.getElementById("bootText");
+/* ========================== BOOT SEQUENCE ========================== */
+const bootText=document.getElementById("bootText");
+let bootLines=[...Array(50).keys()].map(i=>`BOOTING /sindows/bin/module${i+1}`);
 let index=0;
-function printLine(){
-    if(index<lines.length){
-        bootText.innerHTML+=lines[index]+"\n";
+
+function bootStep(){
+    if(index<bootLines.length){
+        bootText.innerHTML+=`\n${bootLines[index]}`;
         index++;
-        setTimeout(printLine,80);
-    } else {
-        setTimeout(showWelcome,5000);
+        setTimeout(bootStep,100);
+    }else{
+        setTimeout(showInstaller,2000);
     }
 }
-function showWelcome(){
-    bootText.innerHTML+="\n[ OK ] WELCOME TO SINDOWS\n";
-    setTimeout(showInstaller,1000);
-}
+setTimeout(bootStep,1500); // маленькая задержка после BOOT MANAGER IS BOOTING...
+
 function showInstaller(){
     document.getElementById("bootScreen").style.display="none";
     document.getElementById("installer").style.display="block";
 }
 
-/* ========================== АНИМАЦИЯ УСТАНОВКИ ========================== */
+/* ========================== INSTALLER ========================== */
 const installBody=document.getElementById("installBody");
 const progressFill=document.getElementById("progressFill");
 const installBtn=document.getElementById("installBtn");
-
-const steps=[
-    "Checking system requirements...",
-    "Creating virtual environment...",
-    "Installing core modules...",
-    "Configuring interface...",
-    "Finalizing setup..."
-];
-
+const steps=["Checking system...","Loading drivers...","Installing core modules...","Configuring interface...","Finalizing setup..."];
 installBtn.addEventListener("click",()=>{
     installBtn.disabled=true;
     let step=0;
@@ -203,47 +111,29 @@ installBtn.addEventListener("click",()=>{
         if(step<steps.length){
             const p=document.createElement("p");
             p.textContent="[ OK ] "+steps[step];
-            p.style.transform="translateY(50px)";
-            p.style.opacity="0";
+            p.style.transform="translateY(50px)"; p.style.opacity="0";
             installBody.appendChild(p);
             setTimeout(()=>{p.style.transition="all 0.5s ease"; p.style.transform="translateY(0)"; p.style.opacity="1";},50);
             progressFill.style.width=((step+1)/steps.length*100)+"%";
             step++;
-        } else {
+        }else{
             clearInterval(interval);
             setTimeout(()=>{document.getElementById("installer").style.display="none"; document.getElementById("system").style.display="block";},500);
         }
     },800);
 });
 
-/* ========================== NOWUI JS ========================== */
-/* Перетаскивание окон */
-function makeDraggable(win){
-    const header=win.querySelector(".now-window-header");
-    let offsetX=0,offsetY=0,isDown=false;
-    header.addEventListener("mousedown",e=>{
-        isDown=true;
-        offsetX=e.clientX-win.offsetLeft;
-        offsetY=e.clientY-win.offsetTop;
-    });
-    document.addEventListener("mouseup",()=>isDown=false);
-    document.addEventListener("mousemove",e=>{
-        if(!isDown)return;
-        win.style.left=(e.clientX-offsetX)+"px";
-        win.style.top=(e.clientY-offsetY)+"px";
-    });
-}
+/* ========================== NOWUI ========================== */
+function makeDraggable(win){const header=win.querySelector(".now-window-header"); let offsetX=0, offsetY=0, isDown=false; header.addEventListener("mousedown",e=>{isDown=true; offsetX=e.clientX-win.offsetLeft; offsetY=e.clientY-win.offsetTop;}); document.addEventListener("mouseup",()=>isDown=false); document.addEventListener("mousemove",e=>{if(!isDown)return; win.style.left=(e.clientX-offsetX)+"px"; win.style.top=(e.clientY-offsetY)+"px";});}
 function openWindow(id){const win=document.getElementById(id); if(!win)return; win.style.display="block"; makeDraggable(win);}
 function closeWindow(id){const win=document.getElementById(id); if(!win)return; win.style.display="none";}
 function showToast(message,duration=3000){const toast=document.createElement("div"); toast.className="now-toast"; toast.textContent=message; document.body.appendChild(toast); setTimeout(()=>{toast.style.opacity=0; toast.style.transform="translateY(20px)"; setTimeout(()=>document.body.removeChild(toast),500);},duration);}
 window.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".now-window").forEach(win=>makeDraggable(win));});
-
-/* ========================== СТАРТ ========================== */
-printLine();
 </script>
 
 </body>
 </html>
 
 
-v3.0
+
+v4.0
